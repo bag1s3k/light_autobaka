@@ -78,8 +78,13 @@ def fetch_data(username: str, password: str) -> List[Mark]:
     }
 
     with requests.session() as s:
-        s.post(LOGIN_URL, data=payload)
+        if s.post(LOGIN_URL, data=payload).status_code != 200:
+            exit() # TODO: logging
+
         r = s.get(MARKS_URL)
+        if r.status_code != 200:
+            exit() # TODO: logging
+
 
     # === FIND EXCACTLY THAT ONE SCRIPT FROM ENTIRE HTML SOURCE CODE === #
     soup = BeautifulSoup(r.content, "html.parser")
@@ -92,8 +97,8 @@ def fetch_data(username: str, password: str) -> List[Mark]:
                 exit() # TODO: logging
 
             array = json.loads(result.group())
-
-            return [Mark(**mark) for mark in array]
             # print(json.dumps(array, indent=4))
 
-            
+            return [Mark(**mark) for mark in array]
+    else:
+        exit() # TODO: logging

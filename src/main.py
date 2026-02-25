@@ -10,4 +10,5 @@ if (username := os.getenv("BAKA_USERNAME")) is None:
 if (password := os.getenv("BAKA_PASSWORD")) is None:
     exit() # TODO: logging
 
-fetch_data(username, password)
+marks = fetch_data(username, password)
+# print(marks)
