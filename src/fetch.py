@@ -6,7 +6,9 @@ from typing import Annotated, Literal, List
 import re
 import json
 from datetime import datetime
+import logging
 
+logger = logging.getLogger(__name__)
 
 # === HELP FUNCS TO VALIDATIONS === #
 def clean_mark(m: str) -> str | int:
@@ -28,10 +30,16 @@ def clean_mark(m: str) -> str | int:
     
     return m
 
+def is_empty(s) -> None:
+    """Tell me if there is missing value"""
+    
+    if s is None:
+        logger.warning("Field is empty")
+
 # === OWN ANNOTATED === #
 MissingDescription = Annotated[
     str,
-    BeforeValidator(lambda x: x),  # TODO: loggging
+    BeforeValidator(is_empty),
     Field(default="Missing")
 ]
 
@@ -48,11 +56,11 @@ class Mark(BaseModel):
     Represent one mark fetched from bakalari website
     """
 
-    caption: Annotated[MissingDescription, Field(description="description of mark")] = "Missing"
+    caption: Annotated[MissingDescription, Field(description="description of mark")]
 
     subject: str = Field(alias="nazev", description="name of the subject")
 
-    date: Annotated[str | datetime, MissingDescription, Field(alias="datum", description="date when mark was added to baka system")] = "Missing"
+    date: Annotated[str | datetime, MissingDescription, Field(alias="datum", description="date when mark was added to baka system")]
 
     weight: int = Field(ge=1, le=10, alias="vaha", description="Weight of the mark")
 
@@ -60,7 +68,7 @@ class Mark(BaseModel):
 
 
 # === FETCH DATA === #
-def fetch_data(username: str, password: str) -> List[Mark]:
+def fetch_data(username: str, password: str) -> List[Mark]: # pyright: ignore[reportReturnType]
     """
     Fetch data from bakalari website
     You receive entire html source code and there's one script where u can find
@@ -79,11 +87,12 @@ def fetch_data(username: str, password: str) -> List[Mark]:
 
     with requests.session() as s:
         if s.post(LOGIN_URL, data=payload).status_code != 200:
-            exit() # TODO: logging
+            logger.error("Login failed")
 
         r = s.get(MARKS_URL)
         if r.status_code != 200:
-            exit() # TODO: logging
+            logger.error("Error with interacting on mark's page")
+
 
 
     # === FIND EXCACTLY THAT ONE SCRIPT FROM ENTIRE HTML SOURCE CODE === #
@@ -94,11 +103,11 @@ def fetch_data(username: str, password: str) -> List[Mark]:
         if "model.items" in script.text:
 
             if (result := re.search(r"\[\{.*?\}\]", script.text, re.DOTALL)) is None:
-                exit() # TODO: logging
+                logger.error("Marks not found")
 
-            array = json.loads(result.group())
+            array = json.loads(result.group()) # pyright: ignore[reportOptionalMemberAccess]
             # print(json.dumps(array, indent=4))
 
             return [Mark(**mark) for mark in array]
     else:
-        exit() # TODO: logging
+        logger.error("Something with marks went wrong")

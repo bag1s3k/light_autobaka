@@ -1,14 +1,20 @@
-from provider import fetch_data
+from log import logging_setup
+logging_setup()
+from log import logging_setup
+
+from fetch import fetch_data
 from dotenv import load_dotenv
 import os
-
+import logging
 
 load_dotenv()
 
-if (username := os.getenv("BAKA_USERNAME")) is None:
-    exit() # TODO: logging
-if (password := os.getenv("BAKA_PASSWORD")) is None:
-    exit() # TODO: logging
+logger = logging.getLogger(__name__)
 
-marks = fetch_data(username, password)
+if (username := os.getenv("BAKA_USERNAME")) is None:
+    logger.error("Failed to load username")
+if (password := os.getenv("BAKA_PASSWORD")) is None:
+    logger.error("Failed to load password")
+
+marks = fetch_data(username, password) # pyright: ignore[reportArgumentType]
 # print(marks)
