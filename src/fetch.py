@@ -42,22 +42,29 @@ MarkValue = Annotated[
 ]
 
 
+# === MARK MODEL === #
 class Mark(BaseModel):
+    """
+    Represent one mark fetched from bakalari website
+    """
 
-    caption: MissingDescription = "Missing"
+    caption: Annotated[MissingDescription, Field(description="description of mark")] = "Missing"
 
-    subject: str = Field(alias="nazev")
+    subject: str = Field(alias="nazev", description="name of the subject")
 
-    date: Annotated[str | datetime, MissingDescription, Field(alias="datum")] = "Missing"
+    date: Annotated[str | datetime, MissingDescription, Field(alias="datum", description="date when mark was added to baka system")] = "Missing"
 
-    weight: int = Field(ge=1, le=10, alias="vaha")
+    weight: int = Field(ge=1, le=10, alias="vaha", description="Weight of the mark")
 
     mark: MarkValue
 
 
+# === FETCH DATA === #
 def fetch_data(username: str, password: str) -> List[Mark]:
     """
     Fetch data from bakalari website
+    You receive entire html source code and there's one script where u can find
+    everything what you need. Than javascript is converted to json style
 
     Args:
         username (str)
@@ -74,6 +81,7 @@ def fetch_data(username: str, password: str) -> List[Mark]:
         s.post(LOGIN_URL, data=payload)
         r = s.get(MARKS_URL)
 
+    # === FIND EXCACTLY THAT ONE SCRIPT FROM ENTIRE HTML SOURCE CODE === #
     soup = BeautifulSoup(r.content, "html.parser")
     scripts = soup.find_all("script")
 
