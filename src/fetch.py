@@ -30,11 +30,13 @@ def clean_mark(m: str) -> str | int:
     
     return m
 
-def is_empty(s) -> None:
+def is_empty(s) -> str:
     """Tell me if there is missing value"""
     
     if s is None:
         logger.warning("Field is empty")
+    
+    return ""
 
 # === OWN ANNOTATED === #
 MissingDescription = Annotated[
