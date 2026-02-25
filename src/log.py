@@ -21,15 +21,12 @@ def logging_setup():
     file_handler.setFormatter(formatter)
 
     # === CONSOLE HANLDER === #
-    class ExitHandler(logging.StreamHandler):
-        def emit(self, record):
-            super().emit(record)
-            if record.levelno in (logging.ERROR, logging.CRITICAL):
-                sys.exit(1)
-    console_handler = ExitHandler()
+    console_handler = logging.StreamHandler()
     console_handler.setFormatter(formatter)
+    console_handler.setLevel(logging.WARNING)
 
+    # === ROOT LOGGER === #
     logger = logging.getLogger()
-    logger.setLevel(logging.ERROR)
-    logger.addHandler(file_handler)
+    logger.setLevel(logging.DEBUG)
     logger.addHandler(console_handler)
+    logger.addHandler(file_handler)
