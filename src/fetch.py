@@ -70,7 +70,7 @@ class Mark(BaseModel):
 
 
 # === FETCH DATA === #
-def fetch_data(username: str, password: str) -> List[Mark]: # pyright: ignore[reportReturnType]
+def fetch_data(username: str, password: str) -> List[Mark]:
     """
     Fetch data from bakalari website
     You receive entire html source code and there's one script where u can find
@@ -89,11 +89,13 @@ def fetch_data(username: str, password: str) -> List[Mark]: # pyright: ignore[re
 
     with requests.session() as s:
         if s.post(LOGIN_URL, data=payload).status_code != 200:
-            logger.error("Login failed")
+            logger.critical("Login failed")
+            exit()
 
         r = s.get(MARKS_URL)
         if r.status_code != 200:
             logger.error("Error with interacting on mark's page")
+            exit()
 
 
 
@@ -106,6 +108,7 @@ def fetch_data(username: str, password: str) -> List[Mark]: # pyright: ignore[re
 
             if (result := re.search(r"\[\{.*?\}\]", script.text, re.DOTALL)) is None:
                 logger.error("Marks not found")
+                exit()
 
             array = json.loads(result.group()) # pyright: ignore[reportOptionalMemberAccess]
             # print(json.dumps(array, indent=4))
@@ -113,3 +116,4 @@ def fetch_data(username: str, password: str) -> List[Mark]: # pyright: ignore[re
             return [Mark(**mark) for mark in array]
     else:
         logger.error("Something with marks went wrong")
+        exit()
