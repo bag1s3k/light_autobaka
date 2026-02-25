@@ -1,0 +1,4 @@
+[server]
+base_url = "https://.website.com"
+login_endpoint = "/login"
+marks_endpoint = "/next"
