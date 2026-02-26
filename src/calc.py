@@ -1,4 +1,7 @@
 from typing import List, TYPE_CHECKING
+import logging
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from fetch import Mark
@@ -45,4 +48,5 @@ def calc_marks(marks: List["Mark"]) -> dict[str, float]:
     for s, m in hashmap.items():
         result[s] = calc_average(m)
     
+    logger.info("Subjects and it's average succesfully calculated")
     return result
