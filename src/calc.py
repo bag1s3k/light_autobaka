@@ -18,7 +18,7 @@ def calc_marks(marks: List["Mark"]) -> dict[str, float]:
         hashmap[subject].append((mark, weight))
 
     # === CALCULATE AVERAGE === #
-    def calc_average(s: str, ms: List[tuple]) -> float:
+    def calc_average(ms: List[tuple]) -> float:
         weighted_sum = sum(m[0] * m[1] for m in ms)
         total_weight = sum(m[1] for m in ms)
 
@@ -26,6 +26,6 @@ def calc_marks(marks: List["Mark"]) -> dict[str, float]:
     
     result = hashmap.copy()
     for s, m in hashmap.items():
-        result[s] = calc_average(s, m)
+        result[s] = calc_average(m)
     
     return result
