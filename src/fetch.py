@@ -2,7 +2,7 @@ from load_config import LOGIN_URL, MARKS_URL
 import requests
 from bs4 import BeautifulSoup
 from pydantic import BaseModel, Field, BeforeValidator
-from typing import Annotated, Literal, List
+from typing import Annotated, List
 import re
 import json
 from datetime import datetime
@@ -11,7 +11,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 # === HELP FUNCS TO VALIDATIONS === #
-def clean_mark(m: str) -> str | int:
+def clean_mark(m: str) -> float:
     """
     Convert str to int & from '1-' (which is not number) make '-1'
 
@@ -24,11 +24,12 @@ def clean_mark(m: str) -> str | int:
     m = m.strip()
 
     if len(m) > 1:
-        return int(m[::-1])
-    if m.isnumeric():
-        return int(m)
+        return float(m[0]) + 0.5
     
-    return m
+    if m.isnumeric():
+        return float(m)
+    else:
+        return 0.0
 
 def is_empty(s) -> str:
     """Tell me if there is missing value"""
@@ -40,13 +41,13 @@ def is_empty(s) -> str:
 
 # === OWN ANNOTATED === #
 MissingDescription = Annotated[
-    str,
+    str | None,
     BeforeValidator(is_empty),
     Field(default="Missing")
 ]
 
 MarkValue = Annotated[
-    int | Literal["N", "X"],
+    float,
     BeforeValidator(clean_mark),
     Field(alias="MarkText")
 ]
@@ -58,11 +59,11 @@ class Mark(BaseModel):
     Represent one mark fetched from bakalari website
     """
 
-    caption: Annotated[MissingDescription, Field(description="description of mark")]
+    caption: Annotated[MissingDescription, Field(description="description of mark")] = None
 
     subject: str = Field(alias="nazev", description="name of the subject")
 
-    date: Annotated[str | datetime, MissingDescription, Field(alias="datum", description="date when mark was added to baka system")]
+    date: Annotated[str | None | datetime, MissingDescription, Field(alias="datum", description="date when mark was added to baka system")] = None
 
     weight: int = Field(ge=1, le=10, alias="vaha", description="Weight of the mark")
 
