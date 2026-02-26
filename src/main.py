@@ -9,6 +9,7 @@ load_dotenv()
 
 from fetch import fetch_data
 from calc import calc_marks
+from export import export_average
 
 
 logger = logging.getLogger(__name__)
@@ -22,3 +23,5 @@ if (password := os.getenv("BAKA_PASSWORD")) is None:
 
 marks = fetch_data(username, password)
 average = calc_marks(marks)
+
+export_average(average)

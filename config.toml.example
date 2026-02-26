@@ -2,3 +2,7 @@
 base_url = "https://.website.com"
 login_endpoint = "/login"
 marks_endpoint = "/next"
+
+[path]
+json_marks = "./marks.json"
+results = "./result.txt"

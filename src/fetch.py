@@ -7,6 +7,7 @@ import re
 import json
 from datetime import datetime
 import logging
+from export import export_json
 
 logger = logging.getLogger(__name__)
 
@@ -112,6 +113,7 @@ def fetch_data(username: str, password: str) -> List[Mark]:
         logger.error("Marks not found")
 
     data = json.loads(raw_data.group()) # pyright: ignore[reportOptionalMemberAccess]
+    export_json(data)
     # print(json.dumps(data, indent=4))
 
     return [Mark(**raw_mark) for raw_mark in data]
