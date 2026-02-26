@@ -36,7 +36,7 @@ def is_empty(s) -> str:
     if s is None:
         logger.warning("Field is empty")
     
-    return ""
+    return s
 
 # === OWN ANNOTATED === #
 MissingDescription = Annotated[
@@ -101,19 +101,16 @@ def fetch_data(username: str, password: str) -> List[Mark]:
 
     # === FIND EXCACTLY THAT ONE SCRIPT FROM ENTIRE HTML SOURCE CODE === #
     soup = BeautifulSoup(r.content, "html.parser")
-    scripts = soup.find_all("script")
 
-    for script in scripts:
-        if "model.items" in script.text:
+    raw_script = soup.find("script", string=re.compile(r"model\.items\s*=\s*")) # pyright: ignore[reportArgumentType, reportCallIssue]
+    if raw_script is None:
+        logger.error("Marks not found")
 
-            if (result := re.search(r"\[\{.*?\}\]", script.text, re.DOTALL)) is None:
-                logger.error("Marks not found")
-                exit()
+    raw_data = re.search(r"\[\{.*?\}\]", raw_script.text, re.DOTALL)
+    if raw_data is None:
+        logger.error("Marks not found")
 
-            array = json.loads(result.group()) # pyright: ignore[reportOptionalMemberAccess]
-            # print(json.dumps(array, indent=4))
+    data = json.loads(raw_data.group()) # pyright: ignore[reportOptionalMemberAccess]
+    # print(json.dumps(data, indent=4))
 
-            return [Mark(**mark) for mark in array]
-    else:
-        logger.error("Something with marks went wrong")
-        exit()
+    return [Mark(**raw_mark) for raw_mark in data]
