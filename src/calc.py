@@ -4,6 +4,14 @@ if TYPE_CHECKING:
     from fetch import Mark
 
 def calc_marks(marks: List["Mark"]) -> dict[str, float]:
+    """
+    Calculate average of each mark
+
+    Args:
+        marks (Mark): list of all marks
+    Return:
+        dict[str, float]: Subjects and it's average
+    """
 
     # === CREATE HASHMAP === #
     hashmap = dict()
@@ -17,13 +25,22 @@ def calc_marks(marks: List["Mark"]) -> dict[str, float]:
 
         hashmap[subject].append((mark, weight))
 
-    # === CALCULATE AVERAGE === #
     def calc_average(ms: List[tuple]) -> float:
+        """
+        Help method to calculate average of mark
+
+        Arg:
+            ms (List[tuple]): one tuple is mark (mark, weight)
+        Return:
+            float: average of subject
+        """
+
         weighted_sum = sum(m[0] * m[1] for m in ms)
         total_weight = sum(m[1] for m in ms)
 
         return round(weighted_sum / total_weight, 2)
-    
+
+    # === CALCULATE AVERAGE === #    
     result = hashmap.copy()
     for s, m in hashmap.items():
         result[s] = calc_average(m)
