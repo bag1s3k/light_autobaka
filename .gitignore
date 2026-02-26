@@ -15,3 +15,5 @@ todo.md
 config.toml
 logs.log
 test/
+marks.json
+result.txt
