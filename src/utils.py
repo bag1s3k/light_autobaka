@@ -42,6 +42,9 @@ def display_results(data: dict[str, float]) -> None:
     Args:
         data (dict): marks to display
     """
+    if not data:
+        return
+
     table = Table(box=box.SIMPLE)
 
     table.add_column("Subject")

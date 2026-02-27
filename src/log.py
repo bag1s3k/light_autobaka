@@ -25,7 +25,8 @@ def logging_setup():
     # === CONSOLE HANLDER === #
     rich_handler = RichHandler(
         level=logging.INFO,
-        rich_tracebacks=True
+        rich_tracebacks=True,
+        omit_repeated_times=False
     )
 
     # === ROOT LOGGER === #
