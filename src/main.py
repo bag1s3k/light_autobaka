@@ -1,7 +1,7 @@
 import logging
 
 from rich.traceback import install
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn, TimeRemainingColumn
 from dotenv import load_dotenv
 
 from log import logging_setup
@@ -25,6 +25,8 @@ with Progress(
     TextColumn("[progress.description]{task.description}"),
     BarColumn(),
     TaskProgressColumn(),
+    TimeRemainingColumn(),
+    transient=True
 ) as progress:
     
     # === SETUP FOR PROGRESS BAR == #

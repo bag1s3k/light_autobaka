@@ -12,7 +12,7 @@ def logging_setup():
     """
 
     formatter = logging.Formatter(
-        fmt="{levelname} {asctime} {name} - {message}",
+        fmt="{levelname:6} {asctime} {name} - {message}",
         datefmt="%H:%M:%S",
         style="{"
     )
@@ -24,7 +24,7 @@ def logging_setup():
 
     # === CONSOLE HANLDER === #
     rich_handler = RichHandler(
-        level=logging.INFO,
+        level=logging.WARNING,
         rich_tracebacks=True,
         omit_repeated_times=False
     )
