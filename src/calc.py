@@ -1,12 +1,15 @@
-from typing import List, TYPE_CHECKING
 import logging
+from typing import TYPE_CHECKING
+
+from utils import calc_average
+
+if TYPE_CHECKING:
+    from utils import Mark
+
 
 logger = logging.getLogger(__name__)
 
-if TYPE_CHECKING:
-    from fetch import Mark
-
-def calc_marks(marks: List["Mark"]) -> dict[str, float]:
+def calc_marks(marks: list["Mark"]) -> dict[str, float]:
     """
     Calculate average of each mark
 
@@ -31,21 +34,6 @@ def calc_marks(marks: List["Mark"]) -> dict[str, float]:
             hashmap[subject] = []
 
         hashmap[subject].append((mark, weight))
-
-    def calc_average(ms: List[tuple]) -> float:
-        """
-        Help method to calculate average of mark
-
-        Arg:
-            ms (List[tuple]): one tuple is mark (mark, weight)
-        Return:
-            float: average of subject
-        """
-
-        weighted_sum = sum(m[0] * m[1] for m in ms)
-        total_weight = sum(m[1] for m in ms)
-
-        return round(weighted_sum / total_weight, 2)
 
     # === CALCULATE AVERAGE === #    
     result = hashmap.copy()

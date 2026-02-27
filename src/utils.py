@@ -1,13 +1,17 @@
-from typing import Generator
+import logging
+import os
+from typing import Generator, Annotated
+from datetime import datetime
+
+from rich import box
 from rich.table import Table
 from rich.console import Console
-from rich import box
-import logging
-from typing import Annotated
-from pydantic import BeforeValidator, Field
+from pydantic import BeforeValidator, Field, BaseModel
 
 logger = logging.getLogger(__name__)
 
+
+# ================ PROGRESS BAR CONFIG =================== #
 class ProgressConfig:
     """Configuration for the progress update function"""
 
@@ -39,7 +43,7 @@ class ProgressConfig:
             yield count
             count += 1
 
-
+# ==================== RESULTS ======================= #
 def display_results(data: dict[str, float]) -> None:
     """ 
     Display results (subject and it's average)
@@ -61,7 +65,7 @@ def display_results(data: dict[str, float]) -> None:
     console = Console()
     console.print(table)
 
-# === HELP FUNCS TO VALIDATIONS === #
+# =================== HELP FUNCS TO VALIDATIONS ================ #
 def clean_mark(m: str) -> float:
     """
     Convert str to int & from '1-' (which is not number) make '-1'
@@ -90,7 +94,7 @@ def is_empty(s) -> str:
     
     return s
 
-# === OWN ANNOTATED === #
+# ================ OWN ANNOTATED =================== #
 MissingDescription = Annotated[
     str | None,
     BeforeValidator(is_empty),
@@ -102,3 +106,56 @@ MarkValue = Annotated[
     BeforeValidator(clean_mark),
     Field(alias="MarkText")
 ]
+
+# ==================== MARK MODEL ===================== #
+class Mark(BaseModel):
+    """
+    Represent one mark fetched from bakalari website
+    """
+
+    caption: Annotated[MissingDescription, Field(description="description of mark")] = None
+
+    subject: str = Field(alias="nazev", description="name of the subject")
+
+    date: Annotated[str | None | datetime, MissingDescription, Field(alias="datum", description="date when mark was added to baka system")] = None
+
+    weight: int = Field(ge=1, le=10, alias="vaha", description="Weight of the mark")
+
+    mark: MarkValue
+
+# ==================== CALCULATE AVERAGE =================== #
+def calc_average(ms: list[tuple]) -> float:
+    """
+    Help method to calculate average of mark
+
+    Arg:
+        ms (List[tuple]): one tuple is mark (mark, weight)
+    Return:
+        float: average of subject
+    """
+
+    weighted_sum = sum(m[0] * m[1] for m in ms)
+    total_weight = sum(m[1] for m in ms)
+
+    return round(weighted_sum / total_weight, 2)
+
+# ================= LOGIN DETAILS ================== #
+def get_credentials(usr, psw) -> tuple[str, str]:
+    """
+    Load login details
+
+    Args:
+        username (str)
+        password (str)
+    Return:
+        tuple[str, str]: username, password
+    """
+    if (username := os.getenv(usr)) is None:
+        logger.critical("Failed to load username")
+        exit()
+    if (password := os.getenv(psw)) is None:
+        logger.critical("Failed to load password")
+        exit()
+    logger.info("Login details loaded successful")
+
+    return username, password

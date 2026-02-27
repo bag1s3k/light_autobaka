@@ -1,7 +1,9 @@
 import logging
+
 from rich.traceback import install
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
 from dotenv import load_dotenv
+
 from log import logging_setup
 
 # Intialization
@@ -12,8 +14,7 @@ load_dotenv()
 from fetch import fetch_data
 from calc import calc_marks
 from export import export_average
-from load_config import get_credentials
-from utils import ProgressConfig, display_results
+from utils import ProgressConfig, display_results, get_credentials
 
 
 logger = logging.getLogger(__name__)
