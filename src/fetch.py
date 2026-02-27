@@ -1,7 +1,8 @@
 from load_config import LOGIN_URL, MARKS_URL
+from utils import MissingDescription, MarkValue
 import requests
 from bs4 import BeautifulSoup
-from pydantic import BaseModel, Field, BeforeValidator
+from pydantic import BaseModel, Field
 from typing import Annotated, List
 import re
 import json
@@ -10,48 +11,6 @@ import logging
 from export import export_json
 
 logger = logging.getLogger(__name__)
-
-# === HELP FUNCS TO VALIDATIONS === #
-def clean_mark(m: str) -> float:
-    """
-    Convert str to int & from '1-' (which is not number) make '-1'
-
-    Args:
-        m (str): mark to check
-    Returns:
-        int | str: correct mark
-    """
-
-    m = m.strip()
-
-    if len(m) > 1:
-        return float(m[0]) + 0.5
-    
-    if m.isnumeric():
-        return float(m)
-    else:
-        return 0.0
-
-def is_empty(s) -> str:
-    """Tell me if there is missing value"""
-    
-    if s is None:
-        logger.warning("Field is empty")
-    
-    return s
-
-# === OWN ANNOTATED === #
-MissingDescription = Annotated[
-    str | None,
-    BeforeValidator(is_empty),
-    Field(default="Missing")
-]
-
-MarkValue = Annotated[
-    float,
-    BeforeValidator(clean_mark),
-    Field(alias="MarkText")
-]
 
 
 # === MARK MODEL === #

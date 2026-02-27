@@ -2,6 +2,11 @@ from typing import Generator
 from rich.table import Table
 from rich.console import Console
 from rich import box
+import logging
+from typing import Annotated
+from pydantic import BeforeValidator, Field
+
+logger = logging.getLogger(__name__)
 
 class ProgressConfig:
     """Configuration for the progress update function"""
@@ -55,3 +60,45 @@ def display_results(data: dict[str, float]) -> None:
 
     console = Console()
     console.print(table)
+
+# === HELP FUNCS TO VALIDATIONS === #
+def clean_mark(m: str) -> float:
+    """
+    Convert str to int & from '1-' (which is not number) make '-1'
+
+    Args:
+        m (str): mark to check
+    Returns:
+        int | str: correct mark
+    """
+
+    m = m.strip()
+
+    if len(m) > 1:
+        return float(m[0]) + 0.5
+    
+    if m.isnumeric():
+        return float(m)
+    else:
+        return 0.0
+
+def is_empty(s) -> str:
+    """Tell me if there is missing value"""
+    
+    if s is None:
+        logger.warning("Field is empty")
+    
+    return s
+
+# === OWN ANNOTATED === #
+MissingDescription = Annotated[
+    str | None,
+    BeforeValidator(is_empty),
+    Field(default="Missing")
+]
+
+MarkValue = Annotated[
+    float,
+    BeforeValidator(clean_mark),
+    Field(alias="MarkText")
+]
