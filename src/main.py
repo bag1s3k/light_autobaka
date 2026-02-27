@@ -13,7 +13,7 @@ from fetch import fetch_data
 from calc import calc_marks
 from export import export_average
 from load_config import get_credentials
-from utils import ProgressConfig
+from utils import ProgressConfig, display_results
 
 
 logger = logging.getLogger(__name__)
@@ -44,3 +44,6 @@ with Progress(
     # === EXPORT RESULTS === #
     export_average(average)
     config.update_progress()
+
+# === OUTPUT === #
+display_results(average)
