@@ -1,9 +1,11 @@
 import logging
 import os
+from rich.traceback import install
 from dotenv import load_dotenv
 from log import logging_setup
 
 # Intialization
+install()
 logging_setup()
 load_dotenv()
 
