@@ -5,7 +5,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 
-from load_config import LOGIN_URL, MARKS_URL
+from load_config import appconfig
 from export import export_json
 from utils import Mark
 
@@ -31,11 +31,11 @@ def fetch_data(username: str, password: str) -> list["Mark"]:
     }
 
     with requests.session() as s:
-        if s.post(LOGIN_URL, data=payload).status_code != 200:
+        if s.post(str(appconfig.server.login_url), data=payload).status_code != 200:
             logger.critical("Login failed")
             exit()
 
-        r = s.get(MARKS_URL)
+        r = s.get(str(appconfig.server.marks_url))
         if r.status_code != 200:
             logger.critical("Error with interacting on mark's page")
             exit()

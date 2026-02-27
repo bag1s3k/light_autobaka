@@ -1,4 +1,4 @@
-from load_config import JSON_MARKS, RESULT_MARKS
+from load_config import appconfig
 import json
 import logging
 
@@ -16,7 +16,7 @@ def export_json(data: dict) -> None:
         return
     
     try:
-        with open(JSON_MARKS, "w", encoding="utf-8") as f:
+        with open(appconfig.path.json_marks, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4)
 
         logger.info("Export json data succesfull")
@@ -38,7 +38,7 @@ def export_average(data: dict) -> None:
         return
 
     try:
-        with open(RESULT_MARKS, "w", encoding="utf-8") as f:
+        with open(appconfig.path.results, "w", encoding="utf-8") as f:
             for s, a in data.items():
                 f.write(f"{s:30} {a}\n")
         logger.info("Export result succesfull")

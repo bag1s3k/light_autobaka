@@ -1,8 +1,7 @@
 import tomllib
 import logging
-import os
 
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl, computed_field, FilePath
 
 logger = logging.getLogger(__name__)
 
@@ -15,15 +14,34 @@ except:
     logger.critical("Loading configuration failed")
     exit()
 
-try:
-    LOGIN_URL = config["server"]["base_url"] + config["server"]["login_endpoint"]
-    MARKS_URL = config["server"]["base_url"] + config["server"]["marks_endpoint"]
-    JSON_MARKS = config["path"]["json_marks"]
-    RESULT_MARKS = config["path"]["results"]
+class ServerConfig(BaseModel):
+    base_url: HttpUrl
+    login_endpoint: str
+    marks_endpoint: str
 
-    logger.debug("Assigning confif constants succesfull")
+    @computed_field
+    @property
+    def login_url(self) -> HttpUrl:
+        """Full login url"""
+        return self._combine_url(self.login_endpoint)
+    
+    @computed_field
+    @property
+    def marks_url(self) -> HttpUrl:
+        """Full marks url"""
+        return self._combine_url(self.marks_endpoint)
+    
+    def _combine_url(self, endpoint: str) -> HttpUrl:
+        """Combine base url + endpoint"""
+        return f"{self.base_url}{endpoint}" # pyright: ignore[reportReturnType]
 
-except:
-    logger.critical("Assigning config constants failed")
-    exit()
 
+class PathConfig(BaseModel):
+    json_marks: FilePath
+    results: FilePath
+
+class AppConfig(BaseModel):
+    server: ServerConfig
+    path: PathConfig
+
+appconfig = AppConfig(**config)
