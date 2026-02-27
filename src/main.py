@@ -23,6 +23,8 @@ if (password := os.getenv("BAKA_PASSWORD")) is None:
     logger.critical("Failed to load password")
     exit()
 
+logger.info("Login details loaded successful")
+
 marks = fetch_data(username, password)
 average = calc_marks(marks)
 

@@ -115,6 +115,8 @@ def fetch_data(username: str, password: str) -> List[Mark]:
     data = json.loads(raw_data.group()) # pyright: ignore[reportOptionalMemberAccess]
     # print(json.dumps(data, indent=4))
 
+    logger.info("Data fetched sucessfully")
     export_json(data)
-
+    
     return [Mark(**raw_mark) for raw_mark in data]
+    # return [Mark(**raw_mark) for raw_mark in []]

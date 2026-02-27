@@ -24,7 +24,7 @@ def logging_setup():
 
     # === CONSOLE HANLDER === #
     rich_handler = RichHandler(
-        level=logging.WARNING,
+        level=logging.INFO,
         rich_tracebacks=True
     )
 
