@@ -1,5 +1,6 @@
 import tomllib
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -23,3 +24,23 @@ except:
     exit()
 
 # TODO: to assign constants use pydantic
+
+def get_credentials(usr, psw) -> tuple[str, str]:
+    """
+    Load login details
+
+    Args:
+        username (str)
+        password (str)
+    Return:
+        tuple[str, str]: username, password
+    """
+    if (username := os.getenv(usr)) is None:
+        logger.critical("Failed to load username")
+        exit()
+    if (password := os.getenv(psw)) is None:
+        logger.critical("Failed to load password")
+        exit()
+    logger.info("Login details loaded successful")
+
+    return username, password
