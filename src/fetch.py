@@ -96,7 +96,7 @@ def fetch_data(username: str, password: str) -> List[Mark]:
 
         r = s.get(MARKS_URL)
         if r.status_code != 200:
-            logger.error("Error with interacting on mark's page")
+            logger.critical("Error with interacting on mark's page")
             exit()
 
 
@@ -113,7 +113,8 @@ def fetch_data(username: str, password: str) -> List[Mark]:
         logger.error("Marks not found")
 
     data = json.loads(raw_data.group()) # pyright: ignore[reportOptionalMemberAccess]
-    export_json(data)
     # print(json.dumps(data, indent=4))
+
+    export_json(data)
 
     return [Mark(**raw_mark) for raw_mark in data]

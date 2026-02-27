@@ -16,6 +16,10 @@ def calc_marks(marks: List["Mark"]) -> dict[str, float]:
         dict[str, float]: Subjects and it's average
     """
 
+    if not marks:
+        logger.warning("No marks to calculate")
+        return {}
+
     # === CREATE HASHMAP === #
     hashmap = dict()
     for m in marks:

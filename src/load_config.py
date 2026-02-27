@@ -3,12 +3,23 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-with open("config.toml", "rb") as f:
-    config = tomllib.load(f)
+try:
+    with open("config.toml", "rb") as f:
+        config = tomllib.load(f)
+    logger.debug("Loading configuration succesfull")
+except:
+    logger.critical("Loading configuration failed")
+    exit()
 
-LOGIN_URL = config["server"]["base_url"] + config["server"]["login_endpoint"]
-MARKS_URL = config["server"]["base_url"] + config["server"]["marks_endpoint"]
-JSON_MARKS = config["path"]["json_marks"]
-RESULT_MARKS = config["path"]["results"]
+try:
+    LOGIN_URL = config["server"]["base_url"] + config["server"]["login_endpoint"]
+    MARKS_URL = config["server"]["base_url"] + config["server"]["marks_endpoint"]
+    JSON_MARKS = config["path"]["json_marks"]
+    RESULT_MARKS = config["path"]["results"]
 
-logger.debug("Loading config with no error")
+    logger.debug("Assigning confif constants succesfull")
+except:
+    logger.critical("Assigning config constants failed")
+    exit()
+
+# TODO: to assign constants use pydantic
