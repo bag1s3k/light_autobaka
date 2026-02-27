@@ -1,4 +1,5 @@
 import logging
+from rich.logging import RichHandler
 
 def logging_setup():
     """
@@ -9,9 +10,11 @@ def logging_setup():
         file handler: log everything
         console handler: log error and higher and in this case program will be execute
     """
+
     formatter = logging.Formatter(
-        fmt="%(levelname)-8s %(asctime)s - %(name)s - %(message)s",
-        datefmt="[%d.%m.%Y %H:%M:%S]"
+        fmt="{levelname} {asctime} {name} - {message}",
+        datefmt="%H:%M:%S",
+        style="{"
     )
 
     # === FILE HANDLER === #
@@ -20,12 +23,13 @@ def logging_setup():
     file_handler.setFormatter(formatter)
 
     # === CONSOLE HANLDER === #
-    console_handler = logging.StreamHandler()
-    console_handler.setFormatter(formatter)
-    console_handler.setLevel(logging.WARNING)
+    rich_handler = RichHandler(
+        level=logging.WARNING,
+        rich_tracebacks=True
+    )
 
     # === ROOT LOGGER === #
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
-    logger.addHandler(console_handler)
     logger.addHandler(file_handler)
+    logger.addHandler(rich_handler)
