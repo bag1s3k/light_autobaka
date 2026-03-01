@@ -128,9 +128,9 @@ def calc_average(ms: list[tuple]) -> float:
     """
     Help method to calculate average of mark
 
-    Arg:
+    Args:
         ms (List[tuple]): one tuple is mark (mark, weight)
-    Return:
+    Returns:
         float: average of subject
     """
 
@@ -145,9 +145,10 @@ def get_credentials(usr, psw) -> tuple[str, str]:
     Load login details
 
     Args:
-        username (str)
-        password (str)
-    Return:
+        username (str):
+        password (str):
+
+    Returns:
         tuple[str, str]: username, password
     """
     if (username := os.getenv(usr)) is None:

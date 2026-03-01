@@ -1,21 +1,22 @@
 import logging
 from typing import TYPE_CHECKING
 
-from utils import calc_average
+from core.utils import calc_average
 
 if TYPE_CHECKING:
-    from utils import Mark
+    from core.utils import Mark
 
 
 logger = logging.getLogger(__name__)
 
 def calc_marks(marks: list["Mark"]) -> dict[str, float]:
     """
-    Calculate average of each mark
+    Calculate the weighted average grade per subject
 
     Args:
-        marks (Mark): list of all marks
-    Return:
+        marks (list[Mark]): list of all marks
+        
+    Returns:
         dict[str, float]: Subjects and it's average
     """
 
@@ -36,9 +37,8 @@ def calc_marks(marks: list["Mark"]) -> dict[str, float]:
         hashmap[subject].append((mark, weight))
 
     # === CALCULATE AVERAGE === #    
-    result = hashmap.copy()
     for s, m in hashmap.items():
-        result[s] = calc_average(m)
+        hashmap[s] = calc_average(m)
     
     logger.info("Subjects and it's average succesfully calculated")
-    return result
+    return hashmap

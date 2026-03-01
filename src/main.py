@@ -1,24 +1,22 @@
 import logging
 
-from rich.traceback import install
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn, TimeRemainingColumn
 from dotenv import load_dotenv
-
-from log import logging_setup
+from logs.log import logging_setup
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn, TimeRemainingColumn
+from rich.traceback import install
 
 # Intialization
 install()
 logging_setup()
 load_dotenv()
 
-from fetch import fetch_data
-from calc import calc_marks
-from export import export_average
-from utils import ProgressConfig, display_results, get_credentials
+from core.fetch import fetch_data
+from core.calc import calc_marks
+from core.export import export_average
+from core.utils import ProgressConfig, display_results, get_credentials
 
 
 logger = logging.getLogger(__name__)
-
 
 with Progress(
     SpinnerColumn(),
@@ -30,7 +28,8 @@ with Progress(
 ) as progress:
     
     # === SETUP FOR PROGRESS BAR == #
-    config = ProgressConfig(4, progress)
+    STEPS = ["Load Credentials", "Fetch Data", "Calculate Marks", "Export Results"]
+    config = ProgressConfig(len(STEPS), progress)
 
     # === LOAD LOGIN DETAILS === #
     username, password = get_credentials("BAKA_USERNAME", "BAKA_PASSWORD")

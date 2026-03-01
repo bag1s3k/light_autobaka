@@ -8,7 +8,7 @@ def logging_setup():
 
     Hanlders:
         file handler: log everything
-        console handler: log error and higher and in this case program will be execute
+        console handler: log warning and higher
     """
 
     formatter = logging.Formatter(

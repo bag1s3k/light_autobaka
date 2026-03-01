@@ -5,9 +5,9 @@ import json
 import requests
 from bs4 import BeautifulSoup
 
-from load_config import appconfig
-from export import export_json
-from utils import Mark
+from config.load_config import appconfig
+from core.export import export_json
+from core.utils import Mark
 
 logger = logging.getLogger(__name__)
 
@@ -20,8 +20,8 @@ def fetch_data(username: str, password: str) -> list["Mark"]:
     everything what you need. Than javascript is converted to json style
 
     Args:
-        username (str)
-        password (str)
+        username (str):
+        password (str):
     Returns:
         List[Mark]: List of parsed marks
     """
@@ -55,10 +55,8 @@ def fetch_data(username: str, password: str) -> list["Mark"]:
         logger.error("Marks not found")
 
     data = json.loads(raw_data.group()) # pyright: ignore[reportOptionalMemberAccess]
-    # print(json.dumps(data, indent=4))
 
     logger.info("Data fetched sucessfully")
     export_json(data)
     
     return [Mark(**raw_mark) for raw_mark in data]
-    # return [Mark(**raw_mark) for raw_mark in []]

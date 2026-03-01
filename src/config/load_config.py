@@ -1,18 +1,18 @@
 import tomllib
 import logging
 
-from pydantic import BaseModel, HttpUrl, computed_field, FilePath
+from pydantic import BaseModel, HttpUrl, computed_field
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
 try:
-    with open("config.toml", "rb") as f:
+    with open("./config.toml", "rb") as f:
         config = tomllib.load(f)
     logger.debug("Loading configuration succesfull")
 
-except:
-    logger.critical("Loading configuration failed")
-    exit()
+except Exception as e:
+    raise Exception(e)
 
 class ServerConfig(BaseModel):
     base_url: HttpUrl
@@ -37,8 +37,8 @@ class ServerConfig(BaseModel):
 
 
 class PathConfig(BaseModel):
-    json_marks: FilePath
-    results: FilePath
+    raw_marks: Path
+    results: Path
 
 class AppConfig(BaseModel):
     server: ServerConfig

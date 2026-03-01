@@ -14,6 +14,7 @@ todo.md
 .env
 config.toml
 logs.log
-test/
+tests/
 marks.json
 result.txt
+tree.txt
