@@ -1,18 +1,29 @@
 import tomllib
 import logging
+import os
+from typing import Any
 
 from pydantic import BaseModel, HttpUrl, computed_field
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-try:
-    with open("./config.toml", "rb") as f:
-        config = tomllib.load(f)
-    logger.debug("Loading configuration succesfull")
+CONFIG_PATH = "./config.toml"
 
-except Exception as e:
-    raise Exception(e)
+def isconfig_exists(path: str = CONFIG_PATH) -> None:
+    if not os.path.exists(path):
+        logger.critical(f"There is not config file, config file should be in {path}")
+        return 
+
+def _load_config(path: str = CONFIG_PATH) -> dict[str, Any]:
+    try:
+        with open(path, "rb") as f:
+            config = tomllib.load(f)
+        logger.debug("Loading configuration succesfull")
+        return config
+
+    except Exception as e:
+        raise Exception(e)
 
 class ServerConfig(BaseModel):
     base_url: HttpUrl
@@ -45,4 +56,4 @@ class AppConfig(BaseModel):
     server: ServerConfig
     path: PathConfig
 
-appconfig = AppConfig(**config)
+appconfig = AppConfig(**_load_config())

@@ -1,19 +1,13 @@
+import core.bootstrap
+
 import logging
 
-from dotenv import load_dotenv
-from logs.log import logging_setup
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn, TimeRemainingColumn
-from rich.traceback import install
 
-# Intialization
-install()
-logging_setup()
-load_dotenv()
-
+from core.utils import ProgressConfig, display_results, get_credentials
 from core.fetch import fetch_data
 from core.calc import calc_marks
 from core.export import export_average
-from core.utils import ProgressConfig, display_results, get_credentials
 
 
 logger = logging.getLogger(__name__)
