@@ -39,6 +39,7 @@ class ServerConfig(BaseModel):
 class PathConfig(BaseModel):
     raw_marks: Path
     results: Path
+    log: Path
 
 class AppConfig(BaseModel):
     server: ServerConfig

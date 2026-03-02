@@ -1,6 +1,8 @@
 import logging
 from rich.logging import RichHandler
 
+from config.load_config import appconfig
+
 def logging_setup():
     """
     Setup loggers
@@ -18,7 +20,7 @@ def logging_setup():
     )
 
     # === FILE HANDLER === #
-    file_handler = logging.FileHandler("logs.log", mode="w", encoding="utf-8")
+    file_handler = logging.FileHandler(appconfig.path.log, mode="w", encoding="utf-8")
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(formatter)
 

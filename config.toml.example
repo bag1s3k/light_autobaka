@@ -4,5 +4,6 @@ login_endpoint = "/login"
 marks_endpoint = "/next/prubzna.aspx?s=chrono" # chronological view required
 
 [path]
-raw_marks = "./marks.json"
-results = "./result.txt"
+raw_marks = "./output/marks.json"
+results = "./output/result.txt"
+log = "./output/logs.log"
