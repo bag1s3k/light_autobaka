@@ -10,16 +10,13 @@ def get_login_details(username_tag, password_tag) -> tuple[str, str]:
     Args:
         username_tag (str): name of username env variable
         password_tag (str): name of password env variable
-
     Returns:
         tuple[str, str]: username, password
     """
     if (username := os.getenv(username_tag)) is None:
-        logger.critical("Failed to load username")
-        exit()
+        raise Exception("Failed to load username")
     if (password := os.getenv(password_tag)) is None:
-        logger.critical("Failed to load password")
-        exit()
-    logger.info("Login details loaded successful")
+        raise Exception("Failed to load password")
 
+    logger.info("Login details loaded successful")
     return username, password

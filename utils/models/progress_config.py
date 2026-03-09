@@ -23,7 +23,8 @@ class ProgressConfig:
                 description=f"{next(self.counter)}/{self.total_task}"
             )
 
-    def _current_task(self) -> Generator[int]:
+    @staticmethod
+    def _current_task() -> Generator[int]:
         """Return number of current task"""
         count = 0
 

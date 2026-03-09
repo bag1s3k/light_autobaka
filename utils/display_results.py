@@ -3,17 +3,11 @@ from rich.console import Console
 from rich.table import Table
 
 def display_results(data: dict[str, float]) -> None:
-    """ 
-    Display results (subject and it's average)
-
-    Args:
-        data (dict): marks to display
-    """
+    """Display results (subject and it's average)"""
     if not data:
         return
 
     table = Table(box=box.SIMPLE)
-
     table.add_column("Subject")
     table.add_column("Average", style="cyan")
 

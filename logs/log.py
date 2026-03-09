@@ -3,12 +3,16 @@ from rich.logging import RichHandler
 
 from config import appconfig
 
+def _show_only_warning(record):
+    """Filter for rich console handler to show only WARNINGS logs"""
+    return record.levelname == "WARNING"
+
 def logging_setup():
     """
     Setup loggers
     Output format: ERROR %d.%m.%Y %H:%M:%S - name - message
 
-    Hanlders:
+    Handlers:
         file handler: log everything
         console handler: log warning and higher
     """
@@ -30,13 +34,14 @@ def logging_setup():
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(formatter_file)
 
-    # === CONSOLE HANLDER === #
+    # === CONSOLE HANDLER === #
     rich_handler = RichHandler(
         level=logging.WARNING,
         rich_tracebacks=True,
         omit_repeated_times=False,
         markup=True
     )
+    rich_handler.addFilter(_show_only_warning)
     rich_handler.setFormatter(formatter_rich)
 
     # === ROOT LOGGER === #

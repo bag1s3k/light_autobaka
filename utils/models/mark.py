@@ -1,56 +1,37 @@
 import logging
-from typing import Annotated, Any
+from typing import Annotated
 from datetime import datetime
 
-from pydantic import Field, BeforeValidator, BaseModel
+from pydantic import Field, BeforeValidator, BaseModel, model_validator, field_validator
 
 logger = logging.getLogger(__name__)
 
-def _clean_mark(m: str) -> float:
-    """
-    Convert str to int & from '1-' (which is not number) make '-1'
-
-    Args:
-        m (str): mark to check
-    Returns:
-        int | str: correct mark
-    """
-
-    m = m.strip()
-
-    if len(m) > 1:
-        return float(m[0]) + 0.5
-    
-    if m.isnumeric():
-        return float(m)
-    else:
-        return 0.0
-
-def _is_empty(s: Any) -> str:
-    """Tell me if there is missing value"""
-    
-    if s is None:
-        logger.warning("Field is empty")
-    
-    return s
-
-MissingDescription = Annotated[
-    str | None,
-    BeforeValidator(_is_empty),
-    Field(default="Missing")
-]
-
-MarkValue = Annotated[
-    float,
-    BeforeValidator(_clean_mark),
-    Field(alias="MarkText")
-]
-
 class Mark(BaseModel):
-    """Represent one mark fetched from bakalari website"""
+    """Represent one mark fetched from Bakalari website"""
+    caption: str = None
+    subject: str = Field(alias="nazev")
+    date: datetime = Field(alias="datum", default=None)
+    weight: int = Field(ge=1, le=10, alias="vaha")
+    mark: float = Field(alias="MarkText")
+    id_: str = Field(alias="id", default=None)
 
-    caption: Annotated[MissingDescription, Field(description="description of mark")] = None
-    subject: str = Field(alias="nazev", description="name of the subject")
-    date: Annotated[str | None | datetime, MissingDescription, Field(alias="datum", description="date when mark was added to baka system")] = None
-    weight: int = Field(ge=1, le=10, alias="vaha", description="Weight of the mark")
-    mark: MarkValue
+    @model_validator(mode="after")
+    def _check_missing(self) -> "Mark":
+        """Raise WARNING log if some values are missing"""
+        missing_list = [attr for attr in list(self.model_fields.keys()) if not getattr(self, attr) and attr != self.id_]
+        if missing_list:
+            missing_values = ", ".join(missing_list)
+            logger.warning(f"Mark '{self.id_}' missing values: {missing_values}")
+        return self
+
+    @field_validator("mark", mode="before")
+    @classmethod
+    def _parse_mark(cls, v) -> float:
+        v = v.strip()
+
+        if len(v) > 1 and v[1] == "-":
+            return float(v[0]) + 0.5
+        elif v.isnumeric():
+            return float(v)
+        else:
+            return -1

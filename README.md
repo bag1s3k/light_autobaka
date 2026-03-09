@@ -37,3 +37,6 @@ uv run ./main.py
 - `marks` = raw marks data
 - `result.txt` = text output with calcuated averages
 - `logs.log`
+
+## Future features maybe
+- absence prediction

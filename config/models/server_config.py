@@ -1,4 +1,4 @@
-from pydantic import BaseModel, HttpUrl, computed_field
+from pydantic import BaseModel, HttpUrl, computed_field, TypeAdapter
 
 class ServerConfig(BaseModel):
     base_url: HttpUrl
@@ -17,6 +17,6 @@ class ServerConfig(BaseModel):
         """Full marks url"""
         return self._combine_url(self.marks_endpoint)
     
-    def _combine_url(self, endpoint: str) -> HttpUrl:
+    def _combine_url(self, endpoint: str) -> HttpUrl :
         """Combine base url + endpoint"""
-        return f"{self.base_url}{endpoint}" # pyright: ignore[reportReturnType]
+        return TypeAdapter(HttpUrl).validate_python(f"{self.base_url}{endpoint}")

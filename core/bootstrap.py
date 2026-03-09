@@ -8,12 +8,11 @@ def initialize() -> None:
     - loading environment variables
     - and logging setup.
     """
-
     from rich.traceback import install
     install()
 
-    from utils import isconfig_exist
-    isconfig_exist()
+    from utils import config_exists
+    config_exists()
 
     from dotenv import load_dotenv
     load_dotenv()
