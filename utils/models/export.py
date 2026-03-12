@@ -3,6 +3,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# TODO: maybe do it on new thread, and pickle??
 class Export:
     def __init__(self, data) -> None:
         self.data: dict = self._ensure_data_exists(data)

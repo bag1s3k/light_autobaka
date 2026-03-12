@@ -1,7 +1,8 @@
 [server]
-base_url = "https://.website.com"
-login_endpoint = "/login"
-marks_endpoint = "/next/prubzna.aspx?s=chrono" # chronological view required
+base_url = "https://website.com"
+login_endpoint = "login"
+after_login_endpoint = "dashboard"
+marks_endpoint = "next/prubzna.aspx?s=chrono" # chronological view required
 
 [path]
 raw_marks = "./output/marks.json"
