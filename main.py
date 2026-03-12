@@ -5,11 +5,14 @@ import logging
 
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn, TimeRemainingColumn
 
-from utils import ProgressConfig, display_results, get_login_details, Export
+from utils import ProgressConfig, display_results, Export
 from core import fetch_data, calc_marks
 
 logger = logging.getLogger(__name__)
 
+
+# TODO: make progress bar updatable global
+# TODO: possible to add more than few checkpoints (a lot of is happening in the background)
 with Progress(
     SpinnerColumn(),
     TextColumn("[progress.description]{task.description}"),
@@ -22,10 +25,9 @@ with Progress(
     STEPS = ["Load Credentials", "Fetch Data", "Calculate Marks", "Export Results"]
     progress_config = ProgressConfig(len(STEPS), progress)
 
-    username, password = get_login_details("BAKA_USERNAME", "BAKA_PASSWORD")
-    progress_config.update_progress()
+    progress_config.update_progress() # temporary represents loading configuration
 
-    marks = fetch_data(username, password)
+    marks = fetch_data()
     progress_config.update_progress()
 
     average = calc_marks(marks)
