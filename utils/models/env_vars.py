@@ -12,11 +12,12 @@ class EnvVariables:
         load_dotenv()
         self.username = self._get_required(USERNAME_ENV_TAG)
         self.password = self._get_required(PASSWORD_ENV_TAG)
-        logger.info("Login details loaded successful")
 
         if IS_GITHUB_ACTIONS:
             from utils.constants import SCHOOL_DATA_TAG
             self.school_data = self._get_required(SCHOOL_DATA_TAG)
+
+        logger.info("Env variables were loaded successfully")
 
     @staticmethod
     def _get_required(key: str) -> str:
@@ -30,4 +31,4 @@ class EnvVariables:
             raise ValueError(f"Failed to load {key}")
         return value
 
-env_vars = EnvVariables()
+env_variables = EnvVariables()

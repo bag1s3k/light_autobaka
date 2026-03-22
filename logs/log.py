@@ -46,6 +46,8 @@ def logging_setup():
         logger.addHandler(file_handler)
         logger.addHandler(rich_handler)
 
+        logger.info("Logging setup to Non-CI use-case")
+
     # === CI environment === #
     # No need to create file handler and heave rich handler.
     # Suffices only basic console handler.
@@ -55,3 +57,5 @@ def logging_setup():
         console_handler.setFormatter(formatter)
 
         logger.addHandler(console_handler)
+
+        logger.info("Logging setup to CI use-case")

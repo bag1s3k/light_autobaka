@@ -54,5 +54,6 @@ def calc_marks(marks: list["Mark"]) -> dict[str, float]:
     averages = {}
     for subject, subject_marks in marks_by_subject.items():
         averages[subject] = _calc_weighted_average(subject_marks)
+        
     logger.info("Subjects and it's average successfully calculated")
     return averages

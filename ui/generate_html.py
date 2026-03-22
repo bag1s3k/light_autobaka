@@ -9,9 +9,11 @@ def create_html(context: dict["str", float]) -> None:
     """Generate HTML file with the results"""
     if not context:
         return
-
-    with open(appconfig.path.html_template, "r", encoding="utf-8") as f:
-        template_html = f.read()
+    try:
+        with open(appconfig.path.html_template, "r", encoding="utf-8") as f:
+            template_html = f.read()
+    except FileNotFoundError:
+        raise FileNotFoundError("File with HTML template not found")
 
     template = Template(template_html)
 

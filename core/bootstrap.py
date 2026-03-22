@@ -21,10 +21,10 @@ def initialize() -> None:
         from utils.config_exists import config_exists
         config_exists()
 
-    import utils.models.env_vars
-
     from logs.log import logging_setup
     logging_setup()
+
+    import utils.models.env_vars
 
     logger = logging.getLogger(__name__)
     logger.debug(f"System initialized via bootstrap CI-Environment: {IS_GITHUB_ACTIONS}")

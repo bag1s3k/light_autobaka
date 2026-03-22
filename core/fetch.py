@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 from config.set_config import appconfig
 from utils.models.mark import Mark
-from utils.models.env_vars import env_vars
+from utils.models.env_vars import env_variables
 from core.exceptions import LoginError, FetchError, DataExtractionError
 from utils.constants import IS_GITHUB_ACTIONS
 
@@ -22,10 +22,12 @@ def _extract_data(soup: BeautifulSoup) -> Any:
     if raw_script is None:
         logger.error("Script which contains data not found")
         raise DataExtractionError("Script which contains data not found")
+    logger.debug("Script which contains data found")
 
     if (mark_data := re.search(r"\[\{.*?}]", raw_script.text, re.DOTALL)) is None:
         logger.error("Script doesn't contain what we expect")
         raise DataExtractionError("Script doesn't contain what we expect")
+    logger.debug("Script contains what we expect")
 
     if not (match := mark_data.group()):
         logger.warning("It seems that there aren't any marks")
@@ -41,8 +43,8 @@ def fetch_data() -> list["Mark"]:
         List[Mark]: List of parsed marks
     """
     payload = {
-        "username": env_vars.username,
-        "password": env_vars.password
+        "username": env_variables.username,
+        "password": env_variables.password
     }
 
     user_agent = {
@@ -58,14 +60,15 @@ def fetch_data() -> list["Mark"]:
         if login_response.status_code != 200 or login_response.url != str(appconfig.server.success_url):
             logging.critical("Login failed")
             raise LoginError("Login failed")
+        logging.debug("Login successful")
 
         target_response = s.get(str(appconfig.server.marks_url))
         if target_response.status_code != 200:
             logging.critical("Fetching data fails")
             raise FetchError("Fetching data fails")
+        logging.debug("Fetching data successful")
 
     soup = BeautifulSoup(target_response.content, "lxml")
-    logger.info("Data fetched successfully")
 
     data = _extract_data(soup)
 
@@ -73,4 +76,6 @@ def fetch_data() -> list["Mark"]:
         from utils.models.export import Export
         Export(data).fetched_data()
 
-    return [Mark(**raw_mark) for raw_mark in data]
+    parsed_marks = [Mark(**raw_mark) for raw_mark in data]
+    logger.info("It seems that marks were fetched and parsed successfully")
+    return parsed_marks

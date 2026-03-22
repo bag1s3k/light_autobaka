@@ -10,3 +10,5 @@ def config_exists(path: str = CONFIG_PATH) -> None:
     """Check if config file exists"""
     if not os.path.exists(path):
         raise ConfigFileError(f"There is not config file, config file should be in {path}")
+
+    logger.debug(f"Config file was found on path: {path}")

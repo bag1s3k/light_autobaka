@@ -4,9 +4,9 @@ sys.path.append(os.getcwd())
 
 from rich import print
 
-from core import calc_marks
-from utils import Mark
-from logs import logging_setup
+from core.calc import calc_marks
+from utils.models.mark import Mark
+from logs.log import logging_setup
 logging_setup()
 
 def test_calc_marks_with_zero_marks():

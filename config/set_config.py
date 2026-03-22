@@ -30,9 +30,9 @@ def _load_config(path: str = None) -> dict[str, Any]:
 
 def _load_config_env() -> dict[str, Any]:
     """Load config from env variable (CI environment)"""
-    from utils.models.env_vars import env_vars
+    from utils.models.env_vars import env_variables
 
-    return json.loads(env_vars.school_data)
+    return json.loads(env_variables.school_data)
 
 if not IS_GITHUB_ACTIONS:
     appconfig = AppConfig(**_load_config())
