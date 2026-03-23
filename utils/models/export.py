@@ -1,6 +1,8 @@
 import json
 import logging
 
+from utils.models.progress_config import update_progress
+
 logger = logging.getLogger(__name__)
 
 # TODO: maybe do it on new thread, and pickle??
@@ -8,6 +10,7 @@ class Export:
     def __init__(self, data) -> None:
         self.data: dict = self._ensure_data_exists(data)
 
+    @update_progress("Exporting")
     def fetched_data(self) -> None:
         """Export raw fetched data converted to JSON"""
         if not self.data:
@@ -25,6 +28,7 @@ class Export:
         except Exception as e:
             logger.exception(e)
 
+    @update_progress("Exporting")
     def results(self) -> None:
         """Export subject and its average"""
         if not self.data:

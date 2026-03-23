@@ -5,9 +5,11 @@ import json
 
 from config.models.app_config import AppConfig
 from utils.constants import IS_GITHUB_ACTIONS
+from utils.models.progress_config import update_progress
 
 logger = logging.getLogger(__name__)
 
+@update_progress("Loading config")
 def _load_config(path: str = None) -> dict[str, Any]:
     """
     Load config from config file

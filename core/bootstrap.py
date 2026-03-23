@@ -1,7 +1,9 @@
 import logging
 
 from utils.constants import IS_GITHUB_ACTIONS
+from utils.models.progress_config import update_progress
 
+@update_progress("Initializing")
 def initialize() -> None:
     """
     Initialize the application by setting up:

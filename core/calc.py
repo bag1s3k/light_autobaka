@@ -2,6 +2,8 @@ import logging
 from typing import TYPE_CHECKING
 from collections import defaultdict
 
+from utils.models.progress_config import update_progress
+
 if TYPE_CHECKING:
     from utils.models.mark import Mark
 
@@ -38,6 +40,7 @@ def _calc_weighted_average(ms: list[tuple]) -> float:
     total_weight = sum(m[1] for m in ms)
     return round(weighted_sum / total_weight, 2)
 
+@update_progress("Calculating marks")
 def calc_marks(marks: list["Mark"]) -> dict[str, float]:
     """
     Calculate the weighted average grade per subject

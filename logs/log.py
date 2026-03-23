@@ -3,7 +3,9 @@ from rich.logging import RichHandler
 
 from config.set_config import appconfig
 from utils.constants import IS_GITHUB_ACTIONS
+from utils.models.progress_config import update_progress
 
+@update_progress("Setting up logging")
 def logging_setup():
     """
     CI environment + file output format: 'DEBUG %d.%m.%Y %H:%M:%S - name - message'

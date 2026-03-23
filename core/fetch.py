@@ -11,6 +11,7 @@ from utils.models.mark import Mark
 from utils.models.env_vars import env_variables
 from core.exceptions import LoginError, FetchError, DataExtractionError
 from utils.constants import IS_GITHUB_ACTIONS
+from utils.models.progress_config import update_progress
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +36,7 @@ def _extract_data(soup: BeautifulSoup) -> Any:
     logger.info("Data successfully extracted")
     return json.loads(match)
 
+@update_progress("Fetching data")
 def fetch_data() -> list["Mark"]:
     """
     Fetch HTML code to extract it
