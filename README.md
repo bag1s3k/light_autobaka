@@ -36,9 +36,9 @@ uv run -m main
 
 ## Github Actions + Pages
 1. Fork my repo
-2. Go to the `secrets` of repo
-3. Go to **GitHub Pages** settings and change source to **GitHub Actions**
-4. Go to **GitHub Actions** and anable them and activate **deploy.yml** workflow
+2. Go to **GitHub Pages** settings and change source to **GitHub Actions**
+3. Go to **GitHub Actions** and anable them and activate **deploy.yml** workflow
+4. Go to the `secrets` of repo
 5. Create following variables:
     - `USERNAME` - your bakalari username
     - `PASSWORD` - your bakalari password
