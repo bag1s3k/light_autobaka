@@ -5,6 +5,7 @@ from jinja2 import Template
 import pytz
 
 from config.set_config import appconfig
+from utils.output import style_marks
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,7 @@ def create_html(context: dict["str", float]) -> None:
         html_content = template.render(
             data=context,
             title="Bakalari Averages",
+            style_marks=style_marks,
             last_update=datetime.now(tz=czech_tz).strftime("%Y-%m-%d %H:%M:%S")
         )
         f.write(html_content)

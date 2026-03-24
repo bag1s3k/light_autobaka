@@ -82,13 +82,15 @@
                     <tr>
                         <th>Subject</th>
                         <th>Average</th>
+                        <th>Marks</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for subject, average in data.items() %}
+                    {% for subject, description in data.items() %}
                     <tr>
                         <td>{{ subject }}</td>
-                        <td>{{ average }}</td>
+                        <td>{{ description[0] }}</td>
+                        <td>{{ style_marks(description[1]) }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

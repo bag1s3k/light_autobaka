@@ -41,7 +41,7 @@ def _calc_weighted_average(ms: list[tuple]) -> float:
     return round(weighted_sum / total_weight, 2)
 
 @update_progress("Calculating marks")
-def calc_marks(marks: list["Mark"]) -> dict[str, float]:
+def calc_marks(marks: list["Mark"]) -> dict[str, tuple]:
     """
     Calculate the weighted average grade per subject
 
@@ -56,7 +56,7 @@ def calc_marks(marks: list["Mark"]) -> dict[str, float]:
 
     averages = {}
     for subject, subject_marks in marks_by_subject.items():
-        averages[subject] = _calc_weighted_average(subject_marks)
+        averages[subject] = (_calc_weighted_average(subject_marks), marks_by_subject[subject])
 
     logger.info("Subjects and it's average successfully calculated")
     return averages
