@@ -9,4 +9,4 @@ raw_marks = "./output/marks.json"
 results = "./output/result.txt"
 log = "./output/logs.log"
 html_template = "./ui/template_index.html"
-html_output = "./index.html"
+html_output = "./index.html" # don't change it or u have to change also in deploy.yml
