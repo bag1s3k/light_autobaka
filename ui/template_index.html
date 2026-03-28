@@ -100,5 +100,143 @@
     </div>
 
     <p class="footer">Last updated: {{ last_update }}</p>
+
+<script>
+    const marksData = {{ marks_json | safe }};
+
+    const predictorHTML = `
+        <div style="margin-top: 40px; padding-top: 25px; border-top: 1px solid #eaeaea;">
+            <h2 style="color: #2c3e50; font-size: 1.5rem; text-align: center; margin-bottom: 20px;">Předvídač průměru</h2>
+            
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px;">
+                <select id="pred-subject" style="padding: 10px; border: 1px solid #eaeaea; border-radius: 6px; font-family: inherit; background: #fff; min-width: 150px; outline: none;"></select>
+                
+                <input type="text" id="pred-mark" list="marks-list" placeholder="Známka (1 až 5)" style="padding: 10px; width: 130px; border: 1px solid #eaeaea; border-radius: 6px; font-family: inherit; outline: none;">
+                <datalist id="marks-list">
+                    <option value="1"></option><option value="1-"></option>
+                    <option value="2"></option><option value="2-"></option>
+                    <option value="3"></option><option value="3-"></option>
+                    <option value="4"></option><option value="4-"></option>
+                    <option value="5"></option>
+                </datalist>
+
+                <input type="number" id="pred-weight" min="1" max="10" placeholder="Váha (1-10)" style="padding: 10px; width: 110px; border: 1px solid #eaeaea; border-radius: 6px; font-family: inherit; outline: none;">
+                
+                <button id="btn-add" style="padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s;">Přidat známku</button>
+                <button id="btn-calc" style="padding: 10px 20px; background: #2ecc71; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s;">Spočítat průměr</button>
+                <button id="btn-reset" style="padding: 10px 20px; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s;">Reset</button>
+            </div>
+
+            <div id="pred-log" style="text-align: center; margin-bottom: 15px; font-size: 0.95em; color: #7f8c8d;">
+                Žádné nasimulované známky.
+            </div>
+
+            <div id="pred-result" style="text-align: center; font-size: 1.4rem; font-weight: 600; color: #2c3e50; background: #f1f5f9; padding: 15px; border-radius: 8px; display: none;">
+                </div>
+        </div>
+    `;
+
+    document.querySelector('.container').insertAdjacentHTML('beforeend', predictorHTML);
+
+    let simulatedMarks = [];
+
+    const subjectSelect = document.getElementById('pred-subject');
+    Object.keys(marksData).forEach(subject => {
+        const option = document.createElement('option');
+        option.value = subject;
+        option.textContent = subject;
+        subjectSelect.appendChild(option);
+    });
+
+    function parseMark(markStr) {
+        markStr = markStr.trim().replace(',', '.'); // pro jistotu
+        if (markStr === "1-") return 1.5;
+        if (markStr === "2-") return 2.5;
+        if (markStr === "3-") return 3.5;
+        if (markStr === "4-") return 4.5;
+        
+        const val = parseFloat(markStr);
+        if (!isNaN(val) && val >= 1 && val <= 5) {
+            return val;
+        }
+        return null;
+    }
+
+    function updateLog() {
+        const logDiv = document.getElementById('pred-log');
+        if (simulatedMarks.length === 0) {
+            logDiv.innerHTML = "Žádné nasimulované známky.";
+            return;
+        }
+        
+        const marksText = simulatedMarks.map(m => 
+            `<strong>${m.subject}</strong>: ${m.markText} (váha ${m.weight})`
+        ).join(' | ');
+        
+        logDiv.innerHTML = `Vloženo: ${marksText}`;
+    }
+
+    document.getElementById('btn-add').addEventListener('click', () => {
+        const subject = subjectSelect.value;
+        const markText = document.getElementById('pred-mark').value;
+        const weightText = document.getElementById('pred-weight').value;
+
+        const markValue = parseMark(markText);
+        const weightValue = parseInt(weightText);
+
+        if (markValue === null) {
+            alert("Prosím zadej platnou známku (1 až 5, nebo např. 2-).");
+            return;
+        }
+        if (isNaN(weightValue) || weightValue < 1 || weightValue > 10) {
+            alert("Prosím zadej platnou váhu (1 až 10).");
+            return;
+        }
+
+        simulatedMarks.push({ subject, markText, markValue, weight: weightValue });
+        updateLog();
+
+        document.getElementById('pred-mark').value = '';
+        document.getElementById('pred-weight').value = '';
+        document.getElementById('pred-mark').focus(); // Hodí kurzor zpět na známku
+    });
+
+    document.getElementById('btn-calc').addEventListener('click', () => {
+        const subject = subjectSelect.value;
+        
+        const baseData = marksData[subject];
+        if (!baseData) return;
+
+        let totalSumProducts = baseData[0];
+        let totalSumWeights = baseData[1];
+
+        simulatedMarks.forEach(m => {
+            if (m.subject === subject) {
+                totalSumProducts += (m.markValue * m.weight);
+                totalSumWeights += m.weight;
+            }
+        });
+
+        const resultDiv = document.getElementById('pred-result');
+        resultDiv.style.display = 'block';
+
+        if (totalSumWeights === 0) {
+            resultDiv.innerHTML = `Průměr pro <strong>${subject}</strong>: Nelze určit (nulová váha)`;
+        } else {
+            const newAverage = totalSumProducts / totalSumWeights;
+            resultDiv.innerHTML = `Nový průměr pro <strong>${subject}</strong>: <span style="color: #3498db;">${newAverage.toFixed(2)}</span>`;
+        }
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+        simulatedMarks = [];
+        updateLog();
+        document.getElementById('pred-mark').value = '';
+        document.getElementById('pred-weight').value = '';
+        document.getElementById('pred-result').style.display = 'none';
+    });
+
+</script>
+
 </body>
 </html>
