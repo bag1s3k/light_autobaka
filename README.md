@@ -7,6 +7,8 @@
 
 ***"light"*** cause it's powered by **request** and **bs4** instead dynamically going through the page as a [previous version](https://github.com/bag1s3k/AutoBaka.git)
 
+>💡The main reason for this is that our school has disabled students from viewing their grade averages and grade predictions. ***I didn't wanted to calculate them manually like other monkeys.***
+
 ## Recommendation
 
 - use `uv` package manager
