@@ -59,4 +59,3 @@ uv run -m main
 
 ## Future features maybe
 - absence prediction
-- marks prediction
