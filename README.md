@@ -1,13 +1,13 @@
 <div align="center">
     <img src="assets/logo.png" style="width:25%">
-    <h1>ligth_autobaka</h1>
+    <h1>light_autobaka</h1>
 </div>
 
-**light_autobaka** is python util to automatically calculate average of each subject from ***Bakaláři***
+**light_autobaka** is python util to automatically calculate average of each subject from _**Bakaláři**_
 
-***"light"*** cause it's powered by **request** and **bs4** instead dynamically going through the page as a [previous version](https://github.com/bag1s3k/AutoBaka.git)
+_**"light"**_ cause it's powered by **request** and **bs4** instead dynamically going through the page as a [previous version](https://github.com/bag1s3k/AutoBaka.git)
 
->💡The main reason for this is that our school has disabled students from viewing their grade averages and grade predictions. ***I didn't wanted to calculate them manually like other monkeys.***
+> 💡The main reason for this is that our school has disabled students from viewing their grade averages and grade predictions. _**I didn't wanted to calculate them manually like other monkeys.**_
 
 ## Recommendation
 
@@ -37,18 +37,24 @@ uv run -m main
 ```
 
 ## Github Actions + Pages
+
 1. Fork my repo
 2. Go to **GitHub Pages** settings and change source to **GitHub Actions**
 3. Go to **GitHub Actions** and anable them and activate **deploy.yml** workflow
 4. Go to the `secrets` of repo
 5. Create following variables:
-    - `USERNAME` - your bakalari username
-    - `PASSWORD` - your bakalari password
-    - `DATA` - configuration of app (instead `config.toml`), it's **json object**
+   - `USERNAME` - your bakalari username
+   - `PASSWORD` - your bakalari password
+   - `DATA` - configuration of app (instead `config.toml`), it's **json object**
 
-        ```json
-        {"base_url": "https://website.com", "login_endpoint": "login", "after_login_endpoint": "dashboard", "marks_endpoint": "next/prubzna.aspx?s=chrono"}
-        ```
+     ```json
+     {
+       "base_url": "https://website.com",
+       "login_endpoint": "login",
+       "after_login_endpoint": "dashboard",
+       "marks_endpoint": "next/prubzna.aspx?s=chrono"
+     }
+     ```
 
 ## Output (default)
 
@@ -58,4 +64,5 @@ uv run -m main
 - `index.html` - only via **CI environment**
 
 ## Future features maybe
+
 - absence prediction
