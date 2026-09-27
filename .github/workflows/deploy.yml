@@ -1,33 +1,24 @@
-# Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
 
 on:
-  # Runs on pushes targeting the default branch
-  # push:
-    # branches: ["main"]
   schedule:
-    - cron: '0 0,3 * * *'
+    - cron: "0 0,3 * * *"
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: true
 
 jobs:
-  # Single deploy job since we're just deploying
   deploy:
     environment:
       name: github-pages
@@ -43,11 +34,11 @@ jobs:
           enable-cache: true
 
       - name: Run Python Script
-        env: 
+        env:
           BAKA_USERNAME: ${{ secrets.USERNAME }}
           BAKA_PASSWORD: ${{ secrets.PASSWORD }}
           SCHOOL_DATA: ${{ secrets.DATA }}
-        run: uv run -m main
+        run: uv run light-autobaka
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -55,7 +46,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: './'
+          path: "./index.html"
 
       - name: Deploy to GitHub Pages
         id: deployment
