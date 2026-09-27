@@ -9,6 +9,9 @@ _**"light"**_ cause it's powered by **request** and **bs4** instead dynamically 
 
 > 💡The main reason for this is that our school has disabled students from viewing their grade averages and grade predictions. _**I didn't wanted to calculate them manually like other monkeys.**_
 
+> [!WARNING]
+> I do not have much time to work on this app. Some settings may not work well. I HIGHLY RECOMMEND KEEPING THE DEFAULT SETTINGS and changing only what you really need (e.g. url's). I am trying to keep the app working.
+
 ## Recommendation
 
 - use `uv` package manager
