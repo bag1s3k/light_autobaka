@@ -1,12 +1,16 @@
+import logging
+
+from rich.logging import RichHandler
+from rich.progress import BarColumn, Progress, SpinnerColumn, TaskProgressColumn, TextColumn
+from rich.traceback import install
+
+from .calculate import calc_marks
+from .config import IS_GITHUB_ACTIONS, load_config, load_credentials
+from .fetch import fetch_data
+from .output import create_html, display_results, export_raw_marks, export_results
+
+
 def main() -> None:
-    import logging
-
-    from rich.logging import RichHandler
-
-    from .calculate import calc_marks
-    from .config import IS_GITHUB_ACTIONS, load_config, load_credentials
-    from .fetch import fetch_data
-    from .output import create_html, display_results, export_raw_marks, export_results
 
     config = load_config()
     credentials = load_credentials()
@@ -24,8 +28,6 @@ def main() -> None:
         handler.setFormatter(formatter)
         root_logger.addHandler(handler)
     else:
-        from rich.traceback import install
-
         install()
         config.path.log.parent.mkdir(parents=True, exist_ok=True)
         file_handler = logging.FileHandler(config.path.log, mode="w", encoding="utf-8")
@@ -39,14 +41,6 @@ def main() -> None:
         averages = calc_marks(marks)
         create_html(averages, config)
     else:
-        from rich.progress import (
-            Progress,
-            SpinnerColumn,
-            TextColumn,
-            BarColumn,
-            TaskProgressColumn,
-        )
-
         with Progress(
             SpinnerColumn(),
             TextColumn("{task.description}"),
