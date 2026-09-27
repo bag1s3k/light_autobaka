@@ -33,7 +33,7 @@ uv sync
 ## Local Run
 
 ```bash
-uv run -m main
+uv run light-autobaka
 ```
 
 ## Github Actions + Pages
