@@ -47,7 +47,7 @@ jobs:
           BAKA_USERNAME: ${{ secrets.USERNAME }}
           BAKA_PASSWORD: ${{ secrets.PASSWORD }}
           SCHOOL_DATA: ${{ secrets.DATA }}
-        run: uv run -m main
+        run: uv run light-autobaka
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
